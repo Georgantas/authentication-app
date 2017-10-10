@@ -1,1 +1,0 @@
-Deepening knowledge on authentication.
