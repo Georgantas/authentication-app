@@ -1,6 +1,7 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt-nodejs');
 
 // define our model
 const userSchema = new Schema({
@@ -8,6 +9,30 @@ const userSchema = new Schema({
     password: String
 });
 
+// on save hook, save password
+// before saving a model, run this function
+userSchema.pre('save', function(next){ //pre-'save'
+    // get access user model
+    const user = this;
+
+    // gen salt then run callback
+    bcrypt.genSalt(10, function(err, salt){
+        if(err){
+            return next(err);
+        }
+
+        // hash password using salt
+        bcrypt.hash(user.password, salt, null, function(err, hash){
+            if(err){
+                return next(err);
+            }
+
+            //overwrite plain text password
+            user.password = hash;
+            next();
+        })
+    });
+})
 
 // create the model class
 const ModelClass = mongoose.model('user', userSchema);
