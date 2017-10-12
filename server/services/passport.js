@@ -13,12 +13,13 @@ const localLogin = new LocalStrategy( localOptions, function(email, password, do
     // otherwise, call done with false to indicate failure
 
     User.findOne( { email: email }, function(err, user){
-        if(err) { done(err, false); }
-        if(!user){ done(null, false); }
+        if(err) { return done(err); }
 
+        if(!user){ return done(null, false); }
+        
         // compare passwords
         user.comparePassword( password, function(err, isMatch) {
-            if(err) { return done(err, false); }
+            if(err) { return done(err); }
             if(!isMatch){ return done(null, false); }
 
             return done(null, user); // will be assigned to req.user

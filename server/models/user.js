@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt-nodejs');
 
 // define our model
 const userSchema = new Schema({
-    email: { type: String, unique: true }, // to enforce uniqueness
+    email: { type: String, unique: true, lowercase: true }, // to enforce uniqueness
     password: String
 });
 
